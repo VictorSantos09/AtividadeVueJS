@@ -75,6 +75,24 @@ function confirmarMenuEditar() {
   carroParaEditar.cor = document.getElementById('corVeiculo').value
   carroParaEditar.valor = document.getElementById('valorVeiculo').value
 }
+
+const carroParaAdicionar = ref({
+  nome: '',
+  cor: '',
+  valor: 0
+})
+
+const isVisibleMenuAdicionarCarro = ref(false)
+function adicionarCarro() {
+  carros.value.push(carroParaAdicionar.value)
+  carroParaAdicionar.value = ref({
+    nome: '',
+    cor: '',
+    valor: 0
+  })
+
+  isVisibleMenuAdicionarCarro.value = !isVisibleMenuAdicionarCarro
+}
 </script>
 
 <template>
@@ -100,7 +118,7 @@ function confirmarMenuEditar() {
 
   <!--Pessoas Registradas-->
   <div class="mt-5 bg-light p-3">
-    <h5>Pessoas Registrados</h5>
+    <h5>Pessoas Registradas</h5>
     <ol>
       <li v-for="n in nomes">{{ n }}</li>
     </ol>
@@ -128,6 +146,25 @@ function confirmarMenuEditar() {
       <button class="m-2 btn btn-danger" @click="confirmarMenuEditar()">Confirmar</button>
       <button class="m-2 btn btn-primary" @click="isVisibleMenuEditarCarro = !isVisibleMenuEditarCarro">Cancelar</button>
     </div>
+  </div>
+
+  <!--Adicionar Veiculo-->
+  <div v-show="isVisibleMenuAdicionarCarro">
+    <h5>Adicionar Veiculo</h5>
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" v-model="carroParaAdicionar.nome">
+      <label for="nomeVeiculo">Nome do Veiculo</label>
+    </div>
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" v-model="carroParaAdicionar.cor">
+      <label for="corVeiculo">Cor do Veiculo</label>
+    </div>
+    <div class="form-floating mb-3">
+      <input type="number" class="form-control" v-model="carroParaAdicionar.valor">
+      <label for="valorVeiculo">Valor</label>
+    </div>
+
+    <button class="m-3 btn btn-primary" @click="adicionarCarro()">Adicionar</button>
   </div>
 
   <!--Veiculos Registrados-->
@@ -161,6 +198,9 @@ function confirmarMenuEditar() {
         </td>
       </tr>
     </table>
+
+    <button class="m-3 btn btn-primary" @click="isVisibleMenuAdicionarCarro = !isVisibleMenuAdicionarCarro">Adicionar Novo
+      Veiculo</button>
   </div>
 
   <!--Pessoas Registradas-->

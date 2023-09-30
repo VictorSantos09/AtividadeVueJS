@@ -54,56 +54,68 @@ function excluir(nome) {
 </script>
 
 <template>
-  <div>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <div class="container">
+    <!--Titulo e Botões-->
+    <div class="bg-light rounded-3 p-3">
+      <h3>{{ titulo }}</h3>
+      <button class="btn btn-primary m-2" @click="upper()">To Upper Case</button>
+      <button class="btn btn-primary m-2" @click="lower()">To Lower Case</button>
+      <button class="btn btn-primary m-2" @click="inverter()">Inverter o título</button>
+      <button class="btn btn-primary m-2" @click="contarLetras()">Contar quantas letras "a", o título possui</button>
 
-    <h3>{{ titulo }}</h3>
-    <button @click="upper()">To Upper Case</button>
-    <button @click="lower()">To Lower Case</button>
+      <div v-if="quantidadeLetras">
+        Quantidade de letras a : {{ quantidadeLetras }}
+      </div>
 
-    <button @click="inverter()">Inverter o título</button>
-
-    <button @click="contarLetras()">Contar quantas letras "a", o título possui</button>
-
-    <div v-if="quantidadeLetras">
-      Quantidade de letras a : {{ quantidadeLetras }}
+      <div v-show="isTextoInvertido">
+        O texto está invertido
+      </div>
     </div>
-    <div v-show="isTextoInvertido">
-      O texto está invertido
+
+    <!--Nomes Registrados-->
+    <div class="mt-5 bg-light p-3">
+      <h5>Nomes Registrados</h5>
+      <ol>
+        <li v-for="n in nomes">{{ n }}</li>
+      </ol>
+
+      <input class="form-control" type="text" placeholder="Digite o nome da pessoa" v-model="nomeParaAdicionar" />
+      <button class="btn btn-primary" @click="adicionarNome()">Adicionar</button><br>
     </div>
 
-    <br>
-    <input type="text" v-model="nomeParaAdicionar" />
-    <button @click="adicionarNome()">Adicionar</button><br>
+    <!--Veiculos Registrados-->
+    <div class="mt-5  bg-light rounded-3 p-3">
+      <h5>Veiculos Registrados</h5>
+      <table class="table">
+        <tr>
+          <th class="col">Nome</th>
+          <th class="col">Cor</th>
+          <th class="col">Valor</th>
+          <th class="col">Preço</th>
+        </tr>
+        <tr v-for="c in carros">
+          <td>{{ c.nome }}</td>
+          <td>{{ c.cor }}</td>
+          <td>{{ c.valor }}</td>
+          <td v-if="c.valor > 1500">
+            Preço alto
+          </td>
+          <td v-else>
+            Preço baixo
+          </td>
+        </tr>
+      </table>
+    </div>
 
-    <ol>
-      <li v-for="n in nomes">{{ n }}</li>
-    </ol>
-
-    <table>
-      <tr>
-        <td>Nome</td>
-        <td>Cor</td>
-        <td>Valor</td>
-        <td>Avaliação valor > 1500 = "preço alto" senão "preco baixo"</td>
-      </tr>
-      <tr v-for="c in carros">
-        <td>{{ c.nome }}</td>
-        <td>{{ c.cor }}</td>
-        <td>{{ c.valor }}</td>
-        <td v-if="c.valor > 1500">
-          Preço alto
-        </td>
-        <td v-else>
-          Preço baixo
-        </td>
-
-      </tr>
-    </table>
-
-    <!--Nomes para exlucir-->
-    <ol>
-      <li v-for="n in nomes">{{ n }}<button @click="excluir(n)">Excluir</button></li>
-    </ol>
-
+    <!--Pessoas Registradas-->
+    <div class="mt-5 bg-light rounded-3 p-3">
+      <h5>Pessoas Registradas</h5>
+      <ol class="list-group">
+        <li class="list-group-item" v-for="n in nomes">{{ n }}<button class="m-1 btn btn-sm btn-primary"
+            @click="excluir(n)">Excluir</button></li>
+      </ol>
+    </div>
   </div>
 </template>

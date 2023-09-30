@@ -52,78 +52,123 @@ function excluir(nome) {
 }
 
 function excluirCarro(nome) {
-  let index = carros.value.find(x => x.nome.match(nome))
+  let index = carros.value.findIndex(x => x.nome == nome)
+  carros.value.splice(index, 1)
 }
 
+var carroParaEditar = ref({
+  nome: '',
+  cor: '',
+  valor: 0
+})
+
+const isVisibleMenuEditarCarro = ref(false)
+function setupMenuEditar(carro) {
+  document.getElementById('nomeVeiculo').value = carro.nome
+  document.getElementById('corVeiculo').value = carro.cor
+  document.getElementById('valorVeiculo').value = carro.valor
+  carroParaEditar = carro
+}
+
+function confirmarMenuEditar() {
+  carroParaEditar.nome = document.getElementById('nomeVeiculo').value
+  carroParaEditar.cor = document.getElementById('corVeiculo').value
+  carroParaEditar.valor = document.getElementById('valorVeiculo').value
+}
 </script>
 
 <template>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-  <div class="container">
-    <!--Titulo e Botões-->
-    <div class="bg-light rounded-3 p-3">
-      <h3>{{ titulo }}</h3>
-      <button class="btn btn-primary m-2" @click="upper()">To Upper Case</button>
-      <button class="btn btn-primary m-2" @click="lower()">To Lower Case</button>
-      <button class="btn btn-primary m-2" @click="inverter()">Inverter o título</button>
-      <button class="btn btn-primary m-2" @click="contarLetras()">Contar quantas letras "a", o título possui</button>
 
-      <div v-if="quantidadeLetras">
-        Quantidade de letras a : {{ quantidadeLetras }}
-      </div>
+  <!--Titulo e Botões-->
+  <div class="bg-light rounded-3 p-3">
+    <h3>{{ titulo }}</h3>
+    <button class="btn btn-primary m-2" @click="upper()">To Upper Case</button>
+    <button class="btn btn-primary m-2" @click="lower()">To Lower Case</button>
+    <button class="btn btn-primary m-2" @click="inverter()">Inverter o título</button>
+    <button class="btn btn-primary m-2" @click="contarLetras()">Contar quantas letras "a", o título possui</button>
 
-      <div v-show="isTextoInvertido">
-        O texto está invertido
-      </div>
+    <div v-if="quantidadeLetras">
+      Quantidade de letras a : {{ quantidadeLetras }}
     </div>
 
-    <!--Nomes Registrados-->
-    <div class="mt-5 bg-light p-3">
-      <h5>Nomes Registrados</h5>
-      <ol>
-        <li v-for="n in nomes">{{ n }}</li>
-      </ol>
+    <div v-show="isTextoInvertido">
+      O texto está invertido
+    </div>
+  </div>
 
-      <input class="form-control" type="text" placeholder="Digite o nome da pessoa" v-model="nomeParaAdicionar" />
-      <button class="btn btn-primary" @click="adicionarNome()">Adicionar</button><br>
+  <!--Pessoas Registradas-->
+  <div class="mt-5 bg-light p-3">
+    <h5>Pessoas Registrados</h5>
+    <ol>
+      <li v-for="n in nomes">{{ n }}</li>
+    </ol>
+    <input class="form-control" type="text" placeholder="Digite o nome da pessoa" v-model="nomeParaAdicionar" />
+    <button class="mt-3 btn btn-primary" @click="adicionarNome()">Adicionar</button><br>
+  </div>
+
+  <!--Editar Veiculo-->
+  <div v-show="isVisibleMenuEditarCarro" class="mt-5 bg-light p-3">
+    <h5>Editar Veiculo</h5>
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="nomeVeiculo">
+      <label for="nomeVeiculo">Nome do Veiculo</label>
+    </div>
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="corVeiculo">
+      <label for="corVeiculo">Cor do Veiculo</label>
+    </div>
+    <div class="form-floating mb-3">
+      <input type="number" class="form-control" id="valorVeiculo">
+      <label for="valorVeiculo">Valor</label>
     </div>
 
-    <!--Veiculos Registrados-->
-    <div class="mt-5  bg-light rounded-3 p-3">
-      <h5>Veiculos Registrados</h5>
-      <table class="table">
-        <tr>
-          <th class="col">Nome</th>
-          <th class="col">Cor</th>
-          <th class="col">Valor</th>
-          <th class="col">Preço</th>
-          <th class="col">Excluir</th>
-          <th class="col">Editar</th>
-        </tr>
-        <tr v-for="c in carros">
-          <td>{{ c.nome }}</td>
-          <td>{{ c.cor }}</td>
-          <td>{{ c.valor }}</td>
-          <td v-if="c.valor > 1500">
-            Preço alto
-          </td>
-          <td v-else>
-            Preço baixo
-          </td>
-          <td><button class="btn btn-primary" @click="excluirCarro(c.nome)">Excluir</button></td>
-          <td>Editar</td>
-        </tr>
-      </table>
+    <div class="d-flex end">
+      <button class="m-2 btn btn-danger" @click="confirmarMenuEditar()">Confirmar</button>
+      <button class="m-2 btn btn-primary" @click="isVisibleMenuEditarCarro = !isVisibleMenuEditarCarro">Cancelar</button>
     </div>
+  </div>
 
-    <!--Pessoas Registradas-->
-    <div class="mt-5 bg-light rounded-3 p-3">
-      <h5>Pessoas Registradas</h5>
-      <ol class="list-group">
-        <li class="list-group-item" v-for="n in nomes">{{ n }}<button class="m-1 btn btn-sm btn-primary"
-            @click="excluir(n)">Excluir</button></li>
-      </ol>
-    </div>
+  <!--Veiculos Registrados-->
+  <div class="mt-5  bg-light rounded-3 p-3">
+    <h5>Veiculos Registrados</h5>
+    <table class="table">
+      <tr>
+        <th class="col">Nome</th>
+        <th class="col">Cor</th>
+        <th class="col">Valor</th>
+        <th class="col">Preço</th>
+        <th class="col">Excluir</th>
+        <th class="col">Editar</th>
+      </tr>
+      <tr v-for="c in carros">
+        <td>{{ c.nome }}</td>
+        <td>{{ c.cor }}</td>
+        <td>{{ c.valor }}</td>
+        <td v-if="c.valor > 1500">
+          Preço alto
+        </td>
+        <td v-else>
+          Preço baixo
+        </td>
+        <td>
+          <button class="btn btn-sm btn-primary" @click="excluirCarro(c.nome)">Excluir</button>
+        </td>
+        <td>
+          <button class="btn btn-sm btn-primary"
+            @click="isVisibleMenuEditarCarro = !isVisibleMenuEditarCarro; setupMenuEditar(c)">Editar</button>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!--Pessoas Registradas-->
+  <div class="mt-5 bg-light rounded-3 p-3">
+    <h5>Pessoas Registradas</h5>
+    <ol class="list-group">
+      <li class="list-group-item" v-for="n in nomes">{{ n }}<button class="m-1 btn btn-sm btn-primary"
+          @click="excluir(n)">Excluir</button></li>
+    </ol>
   </div>
 </template>

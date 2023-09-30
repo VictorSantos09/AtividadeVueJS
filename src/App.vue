@@ -4,14 +4,13 @@ import { ref } from 'vue'
 const titulo = ref('Meu título dinâmico')
 const quantidadeLetras = ref()
 const isTextoInvertido = ref(false)
-const nomes = ref(['Malu','Bia','Thom'])
+const nomes = ref(['Malu', 'Bia', 'Thom'])
 const carros = ref([
-  {nome: "Fusca", valor: 1000, cor: "Azul"},
-  {nome: "Variante", valor: 2000, cor:"Amarela"},
-  {nome: "Brasilia", valor: 3000, cor:"Branca"},
+  { nome: "Fusca", valor: 1000, cor: "Azul" },
+  { nome: "Variante", valor: 2000, cor: "Amarela" },
+  { nome: "Brasilia", valor: 3000, cor: "Branca" },
 ])
 const nomeParaAdicionar = ref('')
-
 
 function upper() {
   titulo.value = titulo.value.toUpperCase()
@@ -23,21 +22,21 @@ function lower() {
 
 function inverter() {
   let texto_invertido = ''
-  for (let i = titulo.value.length - 1; i >= 0; i--) { 
-    texto_invertido += titulo.value[i] 
+  for (let i = titulo.value.length - 1; i >= 0; i--) {
+    texto_invertido += titulo.value[i]
   }
   titulo.value = texto_invertido
   isTextoInvertido.value = !isTextoInvertido.value
 }
 
 function contarLetras() {
-   quantidadeLetras.value = 
-      titulo.value.split('')
-       .filter(letra => 
-          letra.toLowerCase() == 'â' || 
-          letra.toLowerCase() == 'a' || 
-          letra.toLowerCase() == 'á' || 
-          letra.toLowerCase() == 'à' ).length
+  quantidadeLetras.value =
+    titulo.value.split('')
+      .filter(letra =>
+        letra.toLowerCase() == 'â' ||
+        letra.toLowerCase() == 'a' ||
+        letra.toLowerCase() == 'á' ||
+        letra.toLowerCase() == 'à').length
 }
 
 function adicionarNome() {
@@ -45,6 +44,12 @@ function adicionarNome() {
   nomeParaAdicionar.value = ''
 }
 
+function excluir(nome) {
+  let index = nomes.value.indexOf(nome)
+
+  if (index >= 0)
+    nomes.value.splice(index, 1)
+}
 
 </script>
 
@@ -52,22 +57,22 @@ function adicionarNome() {
   <div>
 
     <h3>{{ titulo }}</h3>
-    <button @click="upper()" >To Upper Case</button>
-    <button @click="lower()" >To Lower Case</button>
+    <button @click="upper()">To Upper Case</button>
+    <button @click="lower()">To Lower Case</button>
 
     <button @click="inverter()">Inverter o título</button>
 
     <button @click="contarLetras()">Contar quantas letras "a", o título possui</button>
 
     <div v-if="quantidadeLetras">
-      Quantidade de letras a : {{  quantidadeLetras }}
+      Quantidade de letras a : {{ quantidadeLetras }}
     </div>
     <div v-show="isTextoInvertido">
       O texto está invertido
     </div>
 
     <br>
-    <input type="text" v-model="nomeParaAdicionar"/>
+    <input type="text" v-model="nomeParaAdicionar" />
     <button @click="adicionarNome()">Adicionar</button><br>
 
     <ol>
@@ -79,36 +84,26 @@ function adicionarNome() {
         <td>Nome</td>
         <td>Cor</td>
         <td>Valor</td>
-        <td>Avaliação valor > 1500 = "preço alto" senão "preco baixo"</td> 
+        <td>Avaliação valor > 1500 = "preço alto" senão "preco baixo"</td>
       </tr>
       <tr v-for="c in carros">
         <td>{{ c.nome }}</td>
         <td>{{ c.cor }}</td>
         <td>{{ c.valor }}</td>
         <td v-if="c.valor > 1500">
-            Preço alto
+          Preço alto
         </td>
         <td v-else>
-            Preço baixo
+          Preço baixo
         </td>
 
       </tr>
     </table>
-   
-  </div> 
-</template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+    <!--Nomes para exlucir-->
+    <ol>
+      <li v-for="n in nomes">{{ n }}<button @click="excluir(n)">Excluir</button></li>
+    </ol>
+
+  </div>
+</template>

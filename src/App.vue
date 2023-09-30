@@ -51,6 +51,10 @@ function excluir(nome) {
     nomes.value.splice(index, 1)
 }
 
+function excluirCarro(nome) {
+  let index = carros.value.find(x => x.nome.match(nome))
+}
+
 </script>
 
 <template>
@@ -94,6 +98,8 @@ function excluir(nome) {
           <th class="col">Cor</th>
           <th class="col">Valor</th>
           <th class="col">Preço</th>
+          <th class="col">Excluir</th>
+          <th class="col">Editar</th>
         </tr>
         <tr v-for="c in carros">
           <td>{{ c.nome }}</td>
@@ -105,6 +111,8 @@ function excluir(nome) {
           <td v-else>
             Preço baixo
           </td>
+          <td><button class="btn btn-primary" @click="excluirCarro(c.nome)">Excluir</button></td>
+          <td>Editar</td>
         </tr>
       </table>
     </div>

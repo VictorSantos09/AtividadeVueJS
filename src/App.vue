@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 const titulo = ref('Meu título dinâmico')
 const quantidadeLetras = ref()
@@ -84,6 +84,7 @@ const carroParaAdicionar = ref({
 })
 
 const isVisibleMenuAdicionarCarro = ref(false)
+
 function adicionarCarro() {
   carros.value.push(carroParaAdicionar.value)
   carroParaAdicionar.value = ref({
@@ -93,6 +94,50 @@ function adicionarCarro() {
   })
 
   isVisibleMenuAdicionarCarro.value = !isVisibleMenuAdicionarCarro
+}
+
+const filtro = ref('')
+const filtroCarro = ref('')
+
+const nomesFiltrados = computed(() => {
+  if (filtro.value == null) {
+    return nomes.value
+  }
+
+  return nomes.value.filter(n => {
+    return n.toLowerCase().startsWith(filtro.value.toLowerCase())
+  })
+})
+
+const carrosFiltrados = computed(() => {
+  if (filtroCarro.value == '') {
+    return carros.value
+  }
+
+  return carros.value.filter(c => {
+    var result = c.nome.toLowerCase().startsWith(filtroCarro.value.toLowerCase())
+    orderCarByName()
+    return result
+  })
+
+})
+
+function orderCarByName() {
+  carros.value.sort((c1, c2) => {
+    return c1.nome.localeCompare(c2.nome)
+  })
+}
+
+function orderCarByValue() {
+  carros.value.sort((c1, c2) => {
+    return c1.valor - c2.valor
+  })
+}
+
+function orderCarByColor() {
+  carros.value.sort((c1, c2) => {
+    return c1.cor.localeCompare(c2.cor)
+  })
 }
 </script>
 
@@ -121,30 +166,57 @@ function adicionarCarro() {
   <section class="mt-5 bg-light p-3">
     <h5>Pessoas Registradas</h5>
     <ol>
-      <li v-for="n in nomes">{{ n }} <button class="btn btn-primary btn-sm m-2" @click="excluir(n)">excluir</button></li>
+      <li v-for="n in nomesFiltrados">{{ n }} <button class="btn btn-primary btn-sm m-2"
+          @click="excluir(n)">excluir</button></li>
     </ol>
 
-    <input class="form-control" type="text" placeholder="Digite o nome da pessoa a ser adicionada"
-      v-model="nomeParaAdicionar" />
-    <button class="mt-3 btn btn-primary" @click="adicionarNome()">Adicionar</button><br>
+    <form action="" @submit.prevent="adicionarNome()">
+      <input class="form-control" type="text" placeholder="Digite o nome da pessoa a ser adicionada"
+        v-model="nomeParaAdicionar" required />
+      <button class="mt-3 btn btn-primary" type="submit">Adicionar</button><br>
+    </form>
+
+    <!--Filtrar Pessoa-->
+    <div class="mt-3">
+      <h5>Filtrar</h5>
+      <label class="p-1 d-flex" for="campoFiltro">Filtro</label>
+      <input :class="{ destaque: filtro != '' }" class="form-control" type="text" name="" id="campoFiltro"
+        placeholder="digite o nome a ser filtrado" v-model="filtro">
+    </div>
   </section>
 
+  <!-- Filtrar Carro-->
+  <div class="mt-3">
+    <h5>Filtrar</h5>
+    <label class="p-1 d-flex" for="campoFiltroCarro">Filtro</label>
+    <input :class="{ destaque: filtro != '' }, form - control" type="text" name="" id="campoFiltroCarro"
+      placeholder="digite o carro para filtrar" v-model="filtroCarro">
+  </div>
   <!--Veiculos Registrados-->
   <section class="mt-5 bg-light rounded-3 p-3">
     <h5>Veiculos Registrados</h5>
     <table class="table table-striped table-hover">
       <thead>
         <tr>
-          <th class="col">Nome</th>
-          <th class="col">Cor</th>
-          <th class="col">Valor</th>
+          <th class="col">Nome
+            <button class="btn btn-sm ms-1 btn-success" @click="orderCarByName()">Up</button>
+            <button class="btn btn-sm ms-1 btn-success" @click="carros.reverse()">Down</button>
+          </th>
+          <th class=" col">Cor
+            <button class="btn btn-sm ms-1 btn-success" @click="orderCarByColor()">Up</button>
+            <button class="btn btn-sm ms-1 btn-success" @click="carros.reverse()">Down</button>
+          </th>
+          <th class="col">Valor
+            <button class="btn btn-sm ms-1 btn-success" @click="orderCarByValue()">Up</button>
+            <button class="btn btn-sm ms-1 btn-success" @click="carros.reverse()">Down</button>
+          </th>
           <th class="col">Preço</th>
           <th class="col">Excluir</th>
           <th class="col">Editar</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="c in carros">
+        <tr v-for="c in carrosFiltrados">
           <td scope="row">{{ c.nome }}</td>
           <td scope="row">{{ c.cor }}</td>
           <td scope="row">{{ c.valor }}</td>
@@ -210,3 +282,9 @@ function adicionarCarro() {
     </div>
   </section>
 </template>
+
+<style>
+.destaque {
+  background-color: pink;
+}
+</style>

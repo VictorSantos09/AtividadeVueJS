@@ -123,19 +123,19 @@ const carrosFiltrados = computed(() => {
 })
 
 function orderCarByName() {
-  carros.value.sort((c1, c2) => {
+  carrosFiltrados.value.sort((c1, c2) => {
     return c1.nome.localeCompare(c2.nome)
   })
 }
 
 function orderCarByValue() {
-  carros.value.sort((c1, c2) => {
+  carrosFiltrados.value.sort((c1, c2) => {
     return c1.valor - c2.valor
   })
 }
 
 function orderCarByColor() {
-  carros.value.sort((c1, c2) => {
+  carrosFiltrados.value.sort((c1, c2) => {
     return c1.cor.localeCompare(c2.cor)
   })
 }
@@ -175,21 +175,21 @@ function orderCarByColor() {
         v-model="nomeParaAdicionar" required />
       <button class="mt-3 btn btn-primary" type="submit">Adicionar</button><br>
     </form>
-
-    <!--Filtrar Pessoa-->
-    <div class="mt-3">
-      <h5>Filtrar</h5>
-      <label class="p-1 d-flex" for="campoFiltro">Filtro</label>
-      <input :class="{ destaque: filtro != '' }" class="form-control" type="text" name="" id="campoFiltro"
-        placeholder="digite o nome a ser filtrado" v-model="filtro">
-    </div>
   </section>
 
+  <!--Filtrar Pessoa-->
+  <div class="bg-light mt-3 p-3">
+    <h5>Filtrar Pessoa</h5>
+    <label class="p-1 d-flex" for="campoFiltro">Filtro</label>
+    <input :class="{ destaque: filtro != '' }" class="form-control" type="text" name="" id="campoFiltro"
+      placeholder="digite o nome a ser filtrado" v-model="filtro">
+  </div>
+
   <!-- Filtrar Carro-->
-  <div class="mt-3">
-    <h5>Filtrar</h5>
+  <div class="bg-light mt-3 p-3">
+    <h5>Filtrar Carro</h5>
     <label class="p-1 d-flex" for="campoFiltroCarro">Filtro</label>
-    <input :class="{ destaque: filtro != '' }, form - control" type="text" name="" id="campoFiltroCarro"
+    <input :class="{ destaque: filtro != '' }" type="text" name="" id="campoFiltroCarro"
       placeholder="digite o carro para filtrar" v-model="filtroCarro">
   </div>
   <!--Veiculos Registrados-->
@@ -199,16 +199,16 @@ function orderCarByColor() {
       <thead>
         <tr>
           <th class="col">Nome
-            <button class="btn btn-sm ms-1 btn-success" @click="orderCarByName()">Up</button>
-            <button class="btn btn-sm ms-1 btn-success" @click="carros.reverse()">Down</button>
+            <button class="btn btn-sm ms-1 btn-success" @click="orderCarByName()">↑</button>
+            <button class="btn btn-sm ms-1 btn-success" @click="carros.reverse()">↓</button>
           </th>
           <th class=" col">Cor
-            <button class="btn btn-sm ms-1 btn-success" @click="orderCarByColor()">Up</button>
-            <button class="btn btn-sm ms-1 btn-success" @click="carros.reverse()">Down</button>
+            <button class="btn btn-sm ms-1 btn-success" @click="orderCarByColor()">↑</button>
+            <button class="btn btn-sm ms-1 btn-success" @click="carros.reverse()">↓</button>
           </th>
           <th class="col">Valor
-            <button class="btn btn-sm ms-1 btn-success" @click="orderCarByValue()">Up</button>
-            <button class="btn btn-sm ms-1 btn-success" @click="carros.reverse()">Down</button>
+            <button class="btn btn-sm ms-1 btn-success" @click="orderCarByValue()">↑</button>
+            <button class="btn btn-sm ms-1 btn-success" @click="carros.reverse()">↓</button>
           </th>
           <th class="col">Preço</th>
           <th class="col">Excluir</th>

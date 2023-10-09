@@ -100,7 +100,7 @@ const filtro = ref('')
 const filtroCarro = ref('')
 
 const nomesFiltrados = computed(() => {
-  if (filtro.value == null) {
+  if (filtro.value == '') {
     return nomes.value
   }
 
@@ -116,15 +116,20 @@ const carrosFiltrados = computed(() => {
 
   return carros.value.filter(c => {
     var result = c.nome.toLowerCase().startsWith(filtroCarro.value.toLowerCase())
-    orderCarByName()
+    orderCarByValue()
     return result
   })
-
 })
 
 function orderCarByName() {
   carrosFiltrados.value.sort((c1, c2) => {
     return c1.nome.localeCompare(c2.nome)
+  })
+}
+
+function orderCarByNameDesc() {
+  carrosFiltrados.value.sort((c1, c2) => {
+    return c2.nome.localeCompare(c1.nome)
   })
 }
 
@@ -134,9 +139,21 @@ function orderCarByValue() {
   })
 }
 
+function orderCarByValueDesc() {
+  carrosFiltrados.value.sort((c1, c2) => {
+    return c2.valor - c1.valor
+  })
+}
+
 function orderCarByColor() {
   carrosFiltrados.value.sort((c1, c2) => {
     return c1.cor.localeCompare(c2.cor)
+  })
+}
+
+function orderCarByColorDesc() {
+  carrosFiltrados.value.sort((c1, c2) => {
+    return c2.cor.localeCompare(c1.cor)
   })
 }
 </script>
@@ -164,51 +181,52 @@ function orderCarByColor() {
 
   <!--Pessoas Registradas-->
   <section class="mt-5 bg-light p-3">
+    <!--Filtrar Pessoa-->
+    <div class="p-3">
+      <h5>Filtrar Pessoa</h5>
+      <label class="p-1 d-flex" for="campoFiltro">Filtro</label>
+      <input class="form-control" type="text" name="" id="campoFiltro" placeholder="digite o nome a ser filtrado"
+        v-model="filtro">
+    </div>
+
     <h5>Pessoas Registradas</h5>
     <ol>
       <li v-for="n in nomesFiltrados">{{ n }} <button class="btn btn-primary btn-sm m-2"
-          @click="excluir(n)">excluir</button></li>
+          @click="excluir(n)">excluir</button>
+      </li>
     </ol>
 
     <form action="" @submit.prevent="adicionarNome()">
       <input class="form-control" type="text" placeholder="Digite o nome da pessoa a ser adicionada"
         v-model="nomeParaAdicionar" required />
-      <button class="mt-3 btn btn-primary" type="submit">Adicionar</button><br>
+      <button class="mt-3 btn btn-primary" type="submit">Adicionar</button>
     </form>
   </section>
 
-  <!--Filtrar Pessoa-->
-  <div class="bg-light mt-3 p-3">
-    <h5>Filtrar Pessoa</h5>
-    <label class="p-1 d-flex" for="campoFiltro">Filtro</label>
-    <input :class="{ destaque: filtro != '' }" class="form-control" type="text" name="" id="campoFiltro"
-      placeholder="digite o nome a ser filtrado" v-model="filtro">
-  </div>
-
-  <!-- Filtrar Carro-->
-  <div class="bg-light mt-3 p-3">
-    <h5>Filtrar Carro</h5>
-    <label class="p-1 d-flex" for="campoFiltroCarro">Filtro</label>
-    <input :class="{ destaque: filtro != '' }" type="text" name="" id="campoFiltroCarro"
-      placeholder="digite o carro para filtrar" v-model="filtroCarro">
-  </div>
   <!--Veiculos Registrados-->
   <section class="mt-5 bg-light rounded-3 p-3">
+    <!-- Filtrar Carro-->
+    <div class="p-3">
+      <h5>Filtrar Carro</h5>
+      <label class="p-1 d-flex" for="campoFiltroCarro">Filtro</label>
+      <input class="form-control" type="text" name="" id="campoFiltroCarro" placeholder="digite o carro para filtrar"
+        v-model="filtroCarro">
+    </div>
     <h5>Veiculos Registrados</h5>
     <table class="table table-striped table-hover">
       <thead>
         <tr>
           <th class="col">Nome
             <button class="btn btn-sm ms-1 btn-success" @click="orderCarByName()">↑</button>
-            <button class="btn btn-sm ms-1 btn-success" @click="carros.reverse()">↓</button>
+            <button class="btn btn-sm ms-1 btn-success" @click="orderCarByNameDesc()">↓</button>
           </th>
           <th class=" col">Cor
             <button class="btn btn-sm ms-1 btn-success" @click="orderCarByColor()">↑</button>
-            <button class="btn btn-sm ms-1 btn-success" @click="carros.reverse()">↓</button>
+            <button class="btn btn-sm ms-1 btn-success" @click="orderCarByColorDesc()">↓</button>
           </th>
           <th class="col">Valor
             <button class="btn btn-sm ms-1 btn-success" @click="orderCarByValue()">↑</button>
-            <button class="btn btn-sm ms-1 btn-success" @click="carros.reverse()">↓</button>
+            <button class="btn btn-sm ms-1 btn-success" @click="orderCarByValueDesc()">↓</button>
           </th>
           <th class="col">Preço</th>
           <th class="col">Excluir</th>
@@ -235,27 +253,27 @@ function orderCarByColor() {
         </tr>
       </tbody>
     </table>
-
-    <button class="m-3 btn btn-primary" @click="isVisibleMenuAdicionarCarro = !isVisibleMenuAdicionarCarro">Adicionar Novo
-      Veiculo</button>
+    <button class="m-3 btn btn-primary"
+      @click="isVisibleMenuAdicionarCarro = !isVisibleMenuAdicionarCarro">Adicionar</button>
 
     <!--Adicionar Veiculo-->
     <div v-show="isVisibleMenuAdicionarCarro">
       <h5>Adicionar Veiculo</h5>
-      <div class="form-floating mb-3">
-        <input type="text" class="form-control" v-model="carroParaAdicionar.nome">
-        <label for="nomeVeiculo">Nome do Veiculo</label>
-      </div>
-      <div class="form-floating mb-3">
-        <input type="text" class="form-control" v-model="carroParaAdicionar.cor">
-        <label for="corVeiculo">Cor do Veiculo</label>
-      </div>
-      <div class="form-floating mb-3">
-        <input type="number" class="form-control" v-model="carroParaAdicionar.valor">
-        <label for="valorVeiculo">Valor</label>
-      </div>
-
-      <button class="m-3 btn btn-primary" @click="adicionarCarro()">Adicionar</button>
+      <form action="" @submit.prevent="adicionarCarro()">
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" v-model="carroParaAdicionar.nome" required>
+          <label for="nomeVeiculo">Nome do Veiculo</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" v-model="carroParaAdicionar.cor" required>
+          <label for="corVeiculo">Cor do Veiculo</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="number" class="form-control" v-model="carroParaAdicionar.valor" required>
+          <label for="valorVeiculo">Valor</label>
+        </div>
+        <button class="m-3 btn btn-primary" type="submit">Salvar</button>
+      </form>
     </div>
 
     <!--Editar Veiculo-->
@@ -282,9 +300,3 @@ function orderCarByColor() {
     </div>
   </section>
 </template>
-
-<style>
-.destaque {
-  background-color: pink;
-}
-</style>
